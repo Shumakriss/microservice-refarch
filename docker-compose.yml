@@ -1,0 +1,82 @@
+# version: "3.3"
+# services:
+mysql:
+  build: './mysql'
+  environment:
+    - MYSQL_ROOT_PASSWORD=rootroot
+workbench:
+  build: './workbench'
+  links:
+    - mysql
+  ports:
+    - "8080:8080"
+  environment:
+    - JAVA_OPTS=-Xms256m -Xmx512m -Djava.net.preferIPv4Stack=true
+kieserver:
+  build: './kieserver'
+  # depends_on:
+  #   - workbench
+  links:
+    - workbench:kie_wb
+    - mysql
+  ports:
+    - "8081:8080"
+  environment:
+    - JAVA_OPTS=-Xms256m -Xmx512m -Djava.net.preferIPv4Stack=true
+#  jbpmproxy:
+#    build: './jbpm-proxy'
+#    links:
+#      - kieserver
+#    ports:
+#      - "8082:8082"
+#https://github.com/Mashape/docker-kong/blob/master/compose/docker-compose.yml
+# Still requires multiple restarts to bring up
+kong-database:
+  image: postgres:9.4
+  environment:
+    - POSTGRES_USER=kong
+    - POSTGRES_DB=kong
+kong-migration:
+  image: kong
+  links:
+    - kong-database
+  # depends_on:
+  #   - kong-database
+  environment:
+    - KONG_DATABASE=postgres
+    - KONG_PG_HOST=kong-database
+  command: kong migrations up
+  # deploy:
+  #   restart_policy:
+  #     condition: on-failure
+  #     delay: 5s
+kong:
+  image: kong
+  links:
+    - kong-database
+    - kieserver
+  # depends_on:
+  #   - "kong-database"
+  environment:
+    - KONG_LOG_LEVEL=debug
+    - KONG_DATABASE=postgres
+    - KONG_PG_HOST=kong-database
+    - KONG_PG_DATABASE=kong
+  ports:
+    - "8000:8000"
+    - "8001:8001"
+    - "8443:8443"
+    - "8444:8444"
+  # deploy:
+  #   restart_policy:
+  #     condition: any
+  #     delay: 5s
+cors-proxy:
+  image: nginx
+  links:
+    - kieserver
+    - kong
+  volumes:
+    - ./cors-proxy/default.conf:/etc/nginx/conf.d/default.conf
+  ports:
+    - "80:80"

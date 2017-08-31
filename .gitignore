@@ -1,0 +1,5 @@
+*/*.jar
+.DS_Store
+.idea/
+kieserver/.DS_Store
+workbench/.DS_Store
