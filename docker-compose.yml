@@ -71,11 +71,16 @@ kong:
   #   restart_policy:
   #     condition: any
   #     delay: 5s
+frontend:
+  build: './frontend'
+  ports:
+    - "9000:80"
 cors-proxy:
   image: nginx
   links:
     - kieserver
     - kong
+    - frontend
   volumes:
     - ./cors-proxy/default.conf:/etc/nginx/conf.d/default.conf
   ports:
