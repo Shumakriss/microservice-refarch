@@ -44,23 +44,26 @@ public class TaskController {
 
     @RequestMapping(path="/{taskId}", method = RequestMethod.GET)
     @ResponseBody
-    Task getTaskDetail(@PathParam("containerId") String containerId, @PathParam("processId") String processId, @PathVariable("taskId") Long taskId) {
-        System.out.println("Getting task detail containerId="+ containerId + ", processId=" + processId + ", taskId=" + taskId);
+    Task getTaskDetail(@PathVariable("taskId") Long taskId) {
+        System.out.println("Get task detail for taskId=" + taskId);
 
-        TaskInstance taskInstance = taskClient.getTaskInstance(containerId, 1L);
+        TaskInstance taskInstance = taskClient.findTaskById(taskId);
+        String containerId = taskInstance.getContainerId();
+        String processId = taskInstance.getProcessId();
         Task task = createTaskFromTaskInstance(taskInstance);
 
         List<TaskDatum> inData = new ArrayList<TaskDatum>();
         TaskInputsDefinition userTaskInputDefinitions = processClient.getUserTaskInputDefinitions(containerId, processId, taskInstance.getName());
         Map<String, Object> taskInputContentByTaskId = taskClient.getTaskInputContentByTaskId(containerId, taskId);
         for( String key: userTaskInputDefinitions.getTaskInputs().keySet()){
-            if(taskInputContentByTaskId.containsKey(key)){
-                TaskDatum taskDatum = new TaskDatum();
-                taskDatum.setName(key);
-                taskDatum.setType(userTaskInputDefinitions.getTaskInputs().get(key));
+            TaskDatum taskDatum = new TaskDatum();
+            taskDatum.setName(key);
+            taskDatum.setType(userTaskInputDefinitions.getTaskInputs().get(key));
+
+            if(taskInputContentByTaskId.containsKey(key))
                 taskDatum.setValue(taskInputContentByTaskId.get(key));
-                inData.add(taskDatum);
-            }
+
+            inData.add(taskDatum);
         }
         task.setInData(inData);
 
@@ -68,13 +71,14 @@ public class TaskController {
         TaskOutputsDefinition userTaskOutputDefinitions = processClient.getUserTaskOutputDefinitions(containerId, processId, taskInstance.getName());
         Map<String, Object> taskOutputContentByTaskId = taskClient.getTaskOutputContentByTaskId(containerId, taskId);
         for( String key: userTaskOutputDefinitions.getTaskOutputs().keySet()){
-            if(taskOutputContentByTaskId.containsKey(key)){
-                TaskDatum taskDatum = new TaskDatum();
-                taskDatum.setName(key);
-                taskDatum.setType(userTaskOutputDefinitions.getTaskOutputs().get(key));
+            TaskDatum taskDatum = new TaskDatum();
+            taskDatum.setName(key);
+            taskDatum.setType(userTaskOutputDefinitions.getTaskOutputs().get(key));
+
+            if(taskOutputContentByTaskId.containsKey(key))
                 taskDatum.setValue(taskOutputContentByTaskId.get(key));
-                outData.add(taskDatum);
-            }
+
+            outData.add(taskDatum);
         }
         task.setOutData(outData);
 
@@ -82,6 +86,8 @@ public class TaskController {
         task.setOutputs(taskOutputContentByTaskId);
         task.setInputTypes(userTaskInputDefinitions.getTaskInputs());
         task.setOutputTypes(userTaskOutputDefinitions.getTaskOutputs());
+
+        System.out.println(task);
 
         return task;
     }
