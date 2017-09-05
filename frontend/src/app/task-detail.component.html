@@ -1,0 +1,27 @@
+<div *ngIf="task">
+  <h2>{{task.name}} details!</h2>
+  <div>
+    <label>id: </label>{{task.id}}
+  </div>
+  <div>
+    <label>name: </label>
+    <input [(ngModel)]="task.name" placeholder="name" />
+  </div>
+  <div>
+    <label>Description: </label>{{task.description}}
+  </div>
+  <div>
+    <label>Status: </label>{{task.status}}
+  </div>
+  <h3>Provided Information</h3>
+  <div *ngFor="let datum of inData">
+    <label class="data">{{datum.name}}: </label>{{datum.value}}
+  </div>
+  <h3>Required Information</h3>
+<!--   <div *ngFor="let datum of outData">
+    <label class="data">{{datum.name}}: </label>{{datum.value}}
+  </div> -->
+  <dynamic-form [questions]="questions" [task]="task"></dynamic-form>
+  <!-- <button (click)="save()">Save</button> -->
+  <button (click)="goBack()">Back</button>
+</div>
