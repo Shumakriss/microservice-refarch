@@ -22,6 +22,9 @@ export class QuestionService {
         case "java.lang.String":
           question = this.getQuestionFromString(datum);
           break;
+        case "String":
+          question = this.getQuestionFromString(datum);
+          break;
         case "Object":
           question = this.getQuestionFromObject(datum);
           break;

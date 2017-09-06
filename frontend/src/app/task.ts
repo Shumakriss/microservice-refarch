@@ -14,6 +14,7 @@ export class Task {
   processId: string;
   containerId: string;
   parentId: number;
+  trackingNumber: string;
 
   inData: TaskData[];
   outData: TaskData[];

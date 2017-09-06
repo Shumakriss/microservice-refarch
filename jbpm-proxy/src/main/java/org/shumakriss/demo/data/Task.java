@@ -16,7 +16,6 @@ public class Task {
     private String description;
     private String status;
     private Integer priority;
-
     private Boolean skipable;
     private String actualOwner;
     private String createdBy;
@@ -27,18 +26,13 @@ public class Task {
     private String processId;
     private String containerId;
     private Long parentId;
-
-
-
+    private String trackingNumber;
     private List<TaskDatum> inData;
-
-    public List<TaskDatum> getOutData() {
-        return outData;
-    }
-
-    public void setOutData(List<TaskDatum> outData) {
-        this.outData = outData;
-    }
+    private List<TaskDatum> outData;
+    private Map<String, Object> inputs;
+    private Map<String, Object> outputs;
+    private Map<String, String> inputTypes;
+    private Map<String, String> outputTypes;
 
     @Override
     public String toString() {
@@ -59,6 +53,7 @@ public class Task {
                 ", processId='" + processId + '\'' +
                 ", containerId='" + containerId + '\'' +
                 ", parentId=" + parentId +
+                ", trackingNumber='" + trackingNumber + '\'' +
                 ", inData=" + inData +
                 ", outData=" + outData +
                 ", inputs=" + inputs +
@@ -68,12 +63,21 @@ public class Task {
                 '}';
     }
 
-    private List<TaskDatum> outData;
 
-    private Map<String, Object> inputs;
-    private Map<String, Object> outputs;
-    private Map<String, String> inputTypes;
-    private Map<String, String> outputTypes;
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
+
+    public List<TaskDatum> getOutData() {
+        return outData;
+    }
+    public void setOutData(List<TaskDatum> outData) {
+        this.outData = outData;
+    }
 
     public List<TaskDatum> getInData() {
         return inData;

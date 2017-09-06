@@ -6,7 +6,9 @@
     </div>
 
     <div class="form-row">
-      <button type="submit" [disabled]="!form.valid">Save</button>
+      <!-- <button type="submit" [disabled]="!form.valid">Save</button> -->
+      <button type="button" [disabled]="!form.valid" (click)="onSave()">Save</button>
+      <button type="submit" [disabled]="!form.valid">Complete</button>
     </div>
   </form>
 

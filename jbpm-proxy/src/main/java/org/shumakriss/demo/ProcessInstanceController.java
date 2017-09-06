@@ -1,8 +1,12 @@
 package org.shumakriss.demo;
 
+import org.kie.internal.process.CorrelationKey;
+import org.kie.internal.process.CorrelationKeyFactory;
+import org.kie.internal.process.CorrelationProperty;
 import org.kie.server.api.model.instance.ProcessInstance;
 import org.kie.server.client.ProcessServicesClient;
 import org.kie.server.client.QueryServicesClient;
+import org.shumakriss.demo.data.MyCorrelationKey;
 import org.shumakriss.demo.repository.MyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -52,9 +56,15 @@ public class ProcessInstanceController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    void startInstance(@PathParam("containerId") String containerId, @PathParam("processId") String processId, @RequestBody Map<String, Object> parameters)  {
+    void startInstance(@PathParam("containerId") String containerId, @PathParam("processId") String processId, @PathParam("trackingNumber") String trackingNumber, @RequestBody Map<String, Object> parameters)  {
         System.out.println("Starting process");
-        processClient.startProcess(containerId, processId, parameters);
+
+        if(trackingNumber == null)
+            processClient.startProcess(containerId, processId, parameters);
+        else {
+            CorrelationKey key = new MyCorrelationKey(trackingNumber);
+            processClient.startProcess(containerId, processId, key, parameters);
+        }
     }
 
 }

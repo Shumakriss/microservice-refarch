@@ -1,17 +1,10 @@
 <h2>My Tasks</h2>
-<div>
-  <label>Task name:</label> <input #taskName />
-  <button (click)="add(taskName.value); taskName.value=''">
-    Add
-  </button>
-</div>
 <ul class="tasks">
   <li *ngFor="let task of tasks"
     [class.selected]="task === selectedTask"
     (click)="onSelect(task)">
-    <span class="badge">{{task.id}}</span> {{task.name}}
-    <button class="delete"
-  (click)="delete(task); $event.stopPropagation()">x</button>
+    <span class="badge">{{task.status}}</span> {{task.name}}
+    <!-- <button class="delete" (click)="delete(task); $event.stopPropagation()">x</button> -->
   </li>
 </ul>
 <div *ngIf="selectedTask">

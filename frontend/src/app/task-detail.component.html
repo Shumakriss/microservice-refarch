@@ -13,15 +13,17 @@
   <div>
     <label>Status: </label>{{task.status}}
   </div>
+  <div>
+    <label>Tracking Number: </label>{{task.trackingNumber}}
+  </div>
   <h3>Provided Information</h3>
   <div *ngFor="let datum of inData">
     <label class="data">{{datum.name}}: </label>{{datum.value}}
   </div>
   <h3>Required Information</h3>
-<!--   <div *ngFor="let datum of outData">
-    <label class="data">{{datum.name}}: </label>{{datum.value}}
-  </div> -->
-  <dynamic-form [questions]="questions" [task]="task"></dynamic-form>
-  <!-- <button (click)="save()">Save</button> -->
+  <dynamic-form
+    [questions]="questions"
+    [task]="task">
+  </dynamic-form>
   <button (click)="goBack()">Back</button>
 </div>

@@ -27,19 +27,15 @@ export class TaskService {
 
   getTask(id: number): Promise<Task> {
     const url = `${this.tasksUrl}/${id}`;
-    // const config = {params: {containerId: "Evaluation", processId:"evaluation"}};
-    // return this.http.get(url, config)
     return this.http.get(url)
       .toPromise()
       .then(response => response.json() as Task)
-      // .then(response => console.log(response.json()))
       .catch(this.handleError);
   }
 
-  // TODO: Finish
-  update(task: Task): Promise<Task> {
+  update(task: Task, processVariables: any): Promise<Task> {
     const url = `${this.tasksUrl}/${task.id}`;
-
+    task = this.mapVariablesOntoTask(task, processVariables);
     return this.http
       .put(url, JSON.stringify(task), {headers: this.headers})
       .toPromise()
@@ -47,21 +43,26 @@ export class TaskService {
       .catch(this.handleError);
   }
 
-  // TODO: Finish
-  create(name: string): Promise<Task> {
+  complete(task: Task, processVariables: any): Promise<Task> {
+    const url = `${this.tasksUrl}/${task.id}/states/completed`;
+    task = this.mapVariablesOntoTask(task, processVariables);
     return this.http
-      .post(this.tasksUrl, JSON.stringify({name: name}), {headers: this.headers})
+      .put(url, JSON.stringify(task), {headers: this.headers})
       .toPromise()
-      .then(res => res.json().data as Task)
+      .then(() => task)
       .catch(this.handleError);
   }
 
-  // TODO: Finish
-  delete(id: number): Promise<void> {
-    const url = `${this.tasksUrl}/${id}`;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
+  mapVariablesOntoTask(task: Task, processVariables: any){
+    var outData = task.outData as TaskData[];
+    Object.keys(processVariables).map( (name, discard) => {
+      outData.map( (datum,discard) => {
+        if(datum.name == name) {
+          datum.value = processVariables[name];
+        }
+      });
+    });
+    return task;
   }
+
 }

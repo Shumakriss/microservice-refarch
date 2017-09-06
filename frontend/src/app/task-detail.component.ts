@@ -31,8 +31,9 @@ export class TaskDetailComponent implements OnInit {
   handleNewTask(task) {
     console.log("Handle new task")
     this.task = task;
-    this.inData = task.inData;
-    this.outData = task.outData;
+    this.inData = task.inData as TaskData[];
+    this.outData = task.outData as TaskData[];
+    console.log(typeof(this.outData));
     // TODO: Use outData, not inData
     this.questions = this.questionService.getQuestionsFromTaskData(task.outData);
     // this.questions = this.questionService.getQuestions();

@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @EnableAutoConfiguration
@@ -41,6 +38,11 @@ public class TaskController {
 
     @Autowired
     UserTaskServicesClient taskClient;
+
+    Task addTaskDetail(Task originalTask){
+        Task task = new Task();
+        return task;
+    }
 
     @RequestMapping(path="/{taskId}", method = RequestMethod.GET)
     @ResponseBody
@@ -87,23 +89,72 @@ public class TaskController {
         task.setInputTypes(userTaskInputDefinitions.getTaskInputs());
         task.setOutputTypes(userTaskOutputDefinitions.getTaskOutputs());
 
+        String trackingNumber = processClient.getProcessInstance(task.getContainerId(), task.getProcessInstanceId()).getCorrelationKey();
+        task.setTrackingNumber(trackingNumber);
+
         System.out.println(task);
 
         return task;
     }
 
+    Map<String, Object> getContentFromTaskData(List<TaskDatum> taskData) {
+        Map<String, Object> content = new HashMap<String, Object>();
+
+        for( TaskDatum datum : taskData) {
+            content.put(datum.getName(), datum.getValue());
+        }
+
+        return content;
+    }
+
+    @RequestMapping(path="/{taskId}", method = RequestMethod.PUT)
+    @ResponseBody
+    void updateProcessVariables(@PathVariable("taskId") Long taskId, @RequestBody Task task) {
+        System.out.println("Update process variables for taskId=" + taskId + ", task=" + task);
+
+        Map<String, Object> content = getContentFromTaskData(task.getOutData());
+
+        taskClient.saveTaskContent(task.getContainerId(), task.getId(), content);
+    }
+
+
+    @RequestMapping(path="/{taskId}/states/completed", method = RequestMethod.PUT)
+    @ResponseBody
+    void completeTask(@PathVariable("taskId") Long taskId, @RequestBody Task task) {
+        System.out.println("Complete taskId=" + taskId + ", task=" + task);
+
+        Map<String, Object> content = getContentFromTaskData(task.getOutData());
+
+        taskClient.completeAutoProgress(task.getContainerId(), task.getId(), "kieserver", content);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    Tasklist getTasks()  {
-        System.out.println("Getting tasks");
+    Tasklist getTasks(@PathParam("term") String term)  {
+        if(term == null)
+            System.out.println("Getting tasks");
+        else
+            System.out.println("Searching tasks");
+
         List<Task> tasks = new ArrayList<Task>();
         List<TaskSummary> taskSummaryList = taskClient.findTasks("kieserver", 0, 100);
-        for(TaskSummary taskSummary : taskSummaryList)
-            tasks.add(createTaskFromTaskSummary(taskSummary));
+
+        for(TaskSummary taskSummary : taskSummaryList) {
+            if( (term == null || ((term != null) && (
+                    String.valueOf(taskSummary.getId()).equals(term) ||
+                    taskSummary.getName().toLowerCase().contains(term.toLowerCase()) ||
+                    taskSummary.getStatus().toLowerCase().contains(term.toLowerCase())
+//                    taskSummary.toString().toLowerCase().contains(term.toLowerCase())
+            ))))
+            {
+                tasks.add(createTaskFromTaskSummary(taskSummary));
+            }
+        }
         Tasklist tasklist = new Tasklist();
         tasklist.setTasks(tasks);
         return tasklist;
     }
+
 
     Task createTaskFromTaskSummary(TaskSummary summary) {
         Task task = new Task();
