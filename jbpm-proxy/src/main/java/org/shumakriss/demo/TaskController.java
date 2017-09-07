@@ -39,23 +39,14 @@ public class TaskController {
     @Autowired
     UserTaskServicesClient taskClient;
 
-    Task addTaskDetail(Task originalTask){
-        Task task = new Task();
-        return task;
-    }
-
-    @RequestMapping(path="/{taskId}", method = RequestMethod.GET)
-    @ResponseBody
-    Task getTaskDetail(@PathVariable("taskId") Long taskId) {
-        System.out.println("Get task detail for taskId=" + taskId);
-
-        TaskInstance taskInstance = taskClient.findTaskById(taskId);
-        String containerId = taskInstance.getContainerId();
-        String processId = taskInstance.getProcessId();
-        Task task = createTaskFromTaskInstance(taskInstance);
+    void addTaskDetail(Task task){
+        String containerId = task.getContainerId();
+        String processId = task.getProcessId();
+        Long taskId = task.getId();
+        String name = task.getName();
 
         List<TaskDatum> inData = new ArrayList<TaskDatum>();
-        TaskInputsDefinition userTaskInputDefinitions = processClient.getUserTaskInputDefinitions(containerId, processId, taskInstance.getName());
+        TaskInputsDefinition userTaskInputDefinitions = processClient.getUserTaskInputDefinitions(containerId, processId, name);
         Map<String, Object> taskInputContentByTaskId = taskClient.getTaskInputContentByTaskId(containerId, taskId);
         for( String key: userTaskInputDefinitions.getTaskInputs().keySet()){
             TaskDatum taskDatum = new TaskDatum();
@@ -70,7 +61,7 @@ public class TaskController {
         task.setInData(inData);
 
         List<TaskDatum> outData = new ArrayList<TaskDatum>();
-        TaskOutputsDefinition userTaskOutputDefinitions = processClient.getUserTaskOutputDefinitions(containerId, processId, taskInstance.getName());
+        TaskOutputsDefinition userTaskOutputDefinitions = processClient.getUserTaskOutputDefinitions(containerId, processId, name);
         Map<String, Object> taskOutputContentByTaskId = taskClient.getTaskOutputContentByTaskId(containerId, taskId);
         for( String key: userTaskOutputDefinitions.getTaskOutputs().keySet()){
             TaskDatum taskDatum = new TaskDatum();
@@ -91,9 +82,16 @@ public class TaskController {
 
         String trackingNumber = processClient.getProcessInstance(task.getContainerId(), task.getProcessInstanceId()).getCorrelationKey();
         task.setTrackingNumber(trackingNumber);
+    }
 
+    @RequestMapping(path="/{taskId}", method = RequestMethod.GET)
+    @ResponseBody
+    Task getTaskDetail(@PathVariable("taskId") Long taskId) {
+        System.out.println("Get task detail for taskId=" + taskId);
+        TaskInstance taskInstance = taskClient.findTaskById(taskId);
+        Task task = createTaskFromTaskInstance(taskInstance);
+        addTaskDetail(task);
         System.out.println(task);
-
         return task;
     }
 
@@ -144,10 +142,11 @@ public class TaskController {
                     String.valueOf(taskSummary.getId()).equals(term) ||
                     taskSummary.getName().toLowerCase().contains(term.toLowerCase()) ||
                     taskSummary.getStatus().toLowerCase().contains(term.toLowerCase())
-//                    taskSummary.toString().toLowerCase().contains(term.toLowerCase())
             ))))
             {
-                tasks.add(createTaskFromTaskSummary(taskSummary));
+                Task task = createTaskFromTaskSummary(taskSummary);
+                addTaskDetail(task);
+                tasks.add(task);
             }
         }
         Tasklist tasklist = new Tasklist();
