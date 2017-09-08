@@ -3,6 +3,7 @@ import { Injectable }       from '@angular/core';
 import { DropdownQuestion } from './question-dropdown';
 import { QuestionBase }     from './question-base';
 import { TextboxQuestion }  from './question-textbox';
+import { RadioButtonQuestion }  from './question-radio';
 
 import { Task } From './task'
 import { TaskData } From './task-data'
@@ -28,6 +29,10 @@ export class QuestionService {
         case "Object":
           question = this.getQuestionFromObject(datum);
           break;
+        case "Boolean":
+          // question = this.getQuestionFromBoolean(datum);
+          question = this.getQuestionFromString(datum);
+          break;
         case "org.jbpm.examples.data.User":
           question = this.getQuestionFromUser(datum);
           break;
@@ -36,12 +41,22 @@ export class QuestionService {
           console.log(datum.type);
       }
 
-      this.questions.push(question)
+      this.questions.push(question);
     });
 
-    console.log(this.questions)
+    console.log(this.questions);
 
     return this.questions;
+  }
+
+  getQuestionFromBoolean(datum : TaskData) {
+    return new RadioButtonQuestion({
+            key: datum.name,
+            label: datum.name,
+            value: datum.value,
+            required: true,
+            order: 1
+          });
   }
 
   getQuestionFromString(datum : TaskData) {
@@ -75,40 +90,5 @@ export class QuestionService {
             order: 1
           });
   }  
-
-  //   getQuestions() {
-
-  //   let questions: QuestionBase<any>[] = [
-
-  //     new DropdownQuestion({
-  //       key: 'brave',
-  //       label: 'Bravery Rating',
-  //       options: [
-  //         {key: 'solid',  value: 'Solid'},
-  //         {key: 'great',  value: 'Great'},
-  //         {key: 'good',   value: 'Good'},
-  //         {key: 'unproven', value: 'Unproven'}
-  //       ],
-  //       order: 3
-  //     }),
-
-  //     new TextboxQuestion({
-  //       key: 'firstName',
-  //       label: 'First name',
-  //       value: 'Bombasto',
-  //       required: true,
-  //       order: 1
-  //     }),
-
-  //     new TextboxQuestion({
-  //       key: 'emailAddress',
-  //       label: 'Email',
-  //       type: 'email',
-  //       order: 2
-  //     })
-  //   ];
-
-  //   return questions.sort((a, b) => a.order - b.order);
-  // }
 
 }

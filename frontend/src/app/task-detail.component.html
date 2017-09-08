@@ -1,11 +1,7 @@
 <div *ngIf="task">
-  <h2>{{task.name}} details!</h2>
+  <h2>{{task.name}}</h2>
   <div>
-    <label>id: </label>{{task.id}}
-  </div>
-  <div>
-    <label>name: </label>
-    <input [(ngModel)]="task.name" placeholder="name" />
+    <label>Tracking Number: </label>{{task.trackingNumber}}
   </div>
   <div>
     <label>Description: </label>{{task.description}}
@@ -13,17 +9,18 @@
   <div>
     <label>Status: </label>{{task.status}}
   </div>
-  <div>
-    <label>Tracking Number: </label>{{task.trackingNumber}}
+  <div *ngIf="inData.length > 0">
+    <h3>Provided Information</h3>
+    <div *ngFor="let datum of inData">
+      <label class="data">{{datum.name | replaceUnderscores}}: </label>{{datum.value}}
+    </div>
   </div>
-  <h3>Provided Information</h3>
-  <div *ngFor="let datum of inData">
-    <label class="data">{{datum.name}}: </label>{{datum.value}}
+  <div *ngIf="outData.length > 0">
+    <h3>Required Information</h3>
+    <dynamic-form
+      [questions]="questions"
+      [task]="task">
+    </dynamic-form>
   </div>
-  <h3>Required Information</h3>
-  <dynamic-form
-    [questions]="questions"
-    [task]="task">
-  </dynamic-form>
   <button (click)="goBack()">Back</button>
 </div>

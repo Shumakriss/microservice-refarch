@@ -38,12 +38,8 @@ public class ProcessInstanceController {
     @ResponseBody
     List<ProcessInstance> listInstances()  {
         List<Integer> statuses = new ArrayList<Integer>();
-        statuses.add(0);
-        statuses.add(1);
-        statuses.add(2);
-        statuses.add(3);
-        statuses.add(4);
-        statuses.add(5);
+        for(int i=0; i<6; i++)
+            statuses.add(i);
         List<ProcessInstance> processInstances = queryClient.findProcessInstances(0, 100);
 
         for(ProcessInstance instance : processInstances){

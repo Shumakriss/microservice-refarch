@@ -4,7 +4,20 @@
   <div>
     <div *ngFor="let task of tasks | async"
          (click)="gotoDetail(task)" class="search-result" >
-      {{task.name}}
+      {{task.trackingNumber}} - {{task.name}}
     </div>
   </div>
+
+<!--   <table *ngIf="searchBox.value">
+  	<tr>
+  		<th> Tracking Number </th>
+  		<th> Task </th>
+  		<th> Status </th>
+  	</tr>
+  	<tr *ngFor="let task of tasks | async">
+  		<th> {{task.trackingNumber}} </th>
+  		<th> {{task.name}} </th>
+  		<th> {{task.status}} </th>
+  	</tr>
+  	</table> -->
 </div>

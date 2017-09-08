@@ -41,6 +41,7 @@ public class TaskController {
 
     void addTaskDetail(Task task){
         String containerId = task.getContainerId();
+        System.out.println("ContainerId=" + containerId);
         String processId = task.getProcessId();
         Long taskId = task.getId();
         String name = task.getName();
@@ -49,6 +50,8 @@ public class TaskController {
         TaskInputsDefinition userTaskInputDefinitions = processClient.getUserTaskInputDefinitions(containerId, processId, name);
         Map<String, Object> taskInputContentByTaskId = taskClient.getTaskInputContentByTaskId(containerId, taskId);
         for( String key: userTaskInputDefinitions.getTaskInputs().keySet()){
+            if("TaskName".equals(key) || "Skippable".equals(key))
+                continue;
             TaskDatum taskDatum = new TaskDatum();
             taskDatum.setName(key);
             taskDatum.setType(userTaskInputDefinitions.getTaskInputs().get(key));
@@ -82,6 +85,9 @@ public class TaskController {
 
         String trackingNumber = processClient.getProcessInstance(task.getContainerId(), task.getProcessInstanceId()).getCorrelationKey();
         task.setTrackingNumber(trackingNumber);
+
+        if(task.getDescription() == null || task.getDescription().isEmpty())
+            task.setDescription("No description available.");
     }
 
     @RequestMapping(path="/{taskId}", method = RequestMethod.GET)
@@ -134,18 +140,22 @@ public class TaskController {
         else
             System.out.println("Searching tasks");
 
+        if(term != null)
+            term = term.toLowerCase();
         List<Task> tasks = new ArrayList<Task>();
         List<TaskSummary> taskSummaryList = taskClient.findTasks("kieserver", 0, 100);
 
         for(TaskSummary taskSummary : taskSummaryList) {
+            Task task = createTaskFromTaskSummary(taskSummary);
+            addTaskDetail(task);
+
             if( (term == null || ((term != null) && (
-                    String.valueOf(taskSummary.getId()).equals(term) ||
-                    taskSummary.getName().toLowerCase().contains(term.toLowerCase()) ||
-                    taskSummary.getStatus().toLowerCase().contains(term.toLowerCase())
+                    String.valueOf(task.getId()).equals(term) ||
+                    task.getName().toLowerCase().contains(term) ||
+                    task.getStatus().toLowerCase().contains(term) ||
+                    task.getTrackingNumber().toLowerCase().contains(term)
             ))))
             {
-                Task task = createTaskFromTaskSummary(taskSummary);
-                addTaskDetail(task);
                 tasks.add(task);
             }
         }

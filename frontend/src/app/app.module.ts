@@ -17,6 +17,7 @@ import { InMemoryDataService }  from './in-memory-data.service;
 
 import { DynamicFormComponent }         from './dynamic-form.component';
 import { DynamicFormQuestionComponent } from './dynamic-form-question.component';
+import { ReplaceUnderscores } from './replace-underscores';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { DynamicFormQuestionComponent } from './dynamic-form-question.component'
     TasksComponent,
     TaskSearchComponent,
     DynamicFormComponent,
-    DynamicFormQuestionComponent
+    DynamicFormQuestionComponent,
+    ReplaceUnderscores
   ],
   providers: [ TaskService ],
   bootstrap: [ AppComponent ]

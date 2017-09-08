@@ -46,6 +46,20 @@
   border-radius: 4px 0 0 4px;
   width: 60px;
 }
+.tasks .status .aborted {
+  display: inline-block;
+  font-size: small;
+  color: red;
+  line-height: 1em;
+  position: right;
+}
+.tasks .status .completed {
+  display: inline-block;
+  font-size: small;
+  color: green;
+  line-height: 1em;
+  position: right;
+}
 button {
   font-family: Arial;
   background-color: #eee;

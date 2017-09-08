@@ -3,13 +3,18 @@
   <li *ngFor="let task of tasks"
     [class.selected]="task === selectedTask"
     (click)="onSelect(task)">
-    <span class="badge">{{task.trackingNumber}}</span> {{task.name}}
-    <!-- <button class="delete" (click)="delete(task); $event.stopPropagation()">x</button> -->
+
+    <div [ngSwitch]="task.status" class="status">
+      <span class="badge">{{task.trackingNumber}}</span> {{task.name}}
+      <span class="aborted" *ngSwitchCase="'Aborted'">X</span>
+      <span class="completed" *ngSwitchCase="'Completed'">√</span>
+    </div>
+
   </li>
 </ul>
 <div *ngIf="selectedTask">
   <h2>
-    {{selectedTask.name | uppercase}} is my task
+    {{selectedTask.name}} for tracking number {{selectedTask.trackingNumber}} is {{selectedTask.status | lowercase}}.
   </h2>
   <button (click)="gotoDetail()">View Details</button>
 </div>
