@@ -1,5 +1,6 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
+import { Person } from './person'
 
 import 'rxjs/add/operator/toPromise';
 
@@ -56,12 +57,14 @@ export class TaskService {
   mapVariablesOntoTask(task: Task, processVariables: any){
     var outData = task.outData as TaskData[];
     Object.keys(processVariables).map( (name, discard) => {
+      console.log(name);
       outData.map( (datum,discard) => {
         if(datum.name == name) {
-          datum.value = processVariables[name];
+            datum.value = processVariables[name];
         }
       });
     });
+    console.log(task);
     return task;
   }
 

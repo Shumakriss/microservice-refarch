@@ -34,9 +34,7 @@ export class TaskDetailComponent implements OnInit {
     this.inData = task.inData as TaskData[];
     this.outData = task.outData as TaskData[];
     console.log(typeof(this.outData));
-    // TODO: Use outData, not inData
     this.questions = this.questionService.getQuestionsFromTaskData(task.outData);
-    // this.questions = this.questionService.getQuestions();
   }
 
   ngOnInit(): void {
@@ -49,8 +47,8 @@ export class TaskDetailComponent implements OnInit {
     this.location.back();
   }
 
-  save(): void {
-    this.taskService.update(this.task)
-      .then(() => this.goBack());
-  }
+  // save(): void {
+  //   this.taskService.update(this.task)
+  //     .then(() => this.goBack());
+  // }
 }

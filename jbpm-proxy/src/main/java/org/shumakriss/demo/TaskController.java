@@ -3,6 +3,7 @@ package org.shumakriss.demo;
 import org.kie.api.task.model.TaskData;
 import org.kie.server.api.model.definition.TaskInputsDefinition;
 import org.kie.server.api.model.definition.TaskOutputsDefinition;
+import org.kie.server.api.model.instance.ProcessInstance;
 import org.kie.server.api.model.instance.TaskInstance;
 import org.kie.server.api.model.instance.TaskSummary;
 import org.kie.server.client.ProcessServicesClient;
@@ -39,9 +40,16 @@ public class TaskController {
     @Autowired
     UserTaskServicesClient taskClient;
 
+    Map<String, String> getTypeMappings(){
+        Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("Work_Product", "TextboxQuestion");
+        mappings.put("Second_Actor", "DropdownQuestion");
+        mappings.put("Approve", "CheckboxQuestion");
+        return mappings;
+    }
+
     void addTaskDetail(Task task){
         String containerId = task.getContainerId();
-        System.out.println("ContainerId=" + containerId);
         String processId = task.getProcessId();
         Long taskId = task.getId();
         String name = task.getName();
@@ -69,8 +77,7 @@ public class TaskController {
         for( String key: userTaskOutputDefinitions.getTaskOutputs().keySet()){
             TaskDatum taskDatum = new TaskDatum();
             taskDatum.setName(key);
-            taskDatum.setType(userTaskOutputDefinitions.getTaskOutputs().get(key));
-
+            taskDatum.setType(getTypeMappings().get(key));
             if(taskOutputContentByTaskId.containsKey(key))
                 taskDatum.setValue(taskOutputContentByTaskId.get(key));
 
@@ -83,7 +90,8 @@ public class TaskController {
         task.setInputTypes(userTaskInputDefinitions.getTaskInputs());
         task.setOutputTypes(userTaskOutputDefinitions.getTaskOutputs());
 
-        String trackingNumber = processClient.getProcessInstance(task.getContainerId(), task.getProcessInstanceId()).getCorrelationKey();
+        ProcessInstance processInstance = processClient.getProcessInstance(task.getContainerId(), task.getProcessInstanceId());
+        String trackingNumber = processInstance.getCorrelationKey();
         task.setTrackingNumber(trackingNumber);
 
         if(task.getDescription() == null || task.getDescription().isEmpty())
