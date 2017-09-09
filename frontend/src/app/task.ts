@@ -18,9 +18,4 @@ export class Task {
 
   inData: TaskData[];
   outData: TaskData[];
-
-  inputs: object;
-  outputs: object;
-  inputTypes: object;
-  outputTypes: object;
 }

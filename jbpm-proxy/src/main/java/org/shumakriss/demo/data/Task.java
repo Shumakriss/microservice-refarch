@@ -29,10 +29,6 @@ public class Task {
     private String trackingNumber;
     private List<TaskDatum> inData;
     private List<TaskDatum> outData;
-    private Map<String, Object> inputs;
-    private Map<String, Object> outputs;
-    private Map<String, String> inputTypes;
-    private Map<String, String> outputTypes;
 
     @Override
     public String toString() {
@@ -56,10 +52,6 @@ public class Task {
                 ", trackingNumber='" + trackingNumber + '\'' +
                 ", inData=" + inData +
                 ", outData=" + outData +
-                ", inputs=" + inputs +
-                ", outputs=" + outputs +
-                ", inputTypes=" + inputTypes +
-                ", outputTypes=" + outputTypes +
                 '}';
     }
 
@@ -213,38 +205,6 @@ public class Task {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
-    }
-
-    public Map<String, Object> getInputs() {
-        return inputs;
-    }
-
-    public void setInputs(Map<String, Object> inputs) {
-        this.inputs = inputs;
-    }
-
-    public Map<String, Object> getOutputs() {
-        return outputs;
-    }
-
-    public void setOutputs(Map<String, Object> outputs) {
-        this.outputs = outputs;
-    }
-
-    public Map<String, String> getInputTypes() {
-        return inputTypes;
-    }
-
-    public void setInputTypes(Map<String, String> inputTypes) {
-        this.inputTypes = inputTypes;
-    }
-
-    public Map<String, String> getOutputTypes() {
-        return outputTypes;
-    }
-
-    public void setOutputTypes(Map<String, String> outputTypes) {
-        this.outputTypes = outputTypes;
     }
 
 }
