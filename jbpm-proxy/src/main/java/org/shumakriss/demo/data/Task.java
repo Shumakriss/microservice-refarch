@@ -1,13 +1,9 @@
 package org.shumakriss.demo.data;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by chris on 8/31/17.
- */
+
 public class Task {
 
     private Long id;

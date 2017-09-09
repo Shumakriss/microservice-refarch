@@ -1,8 +1,5 @@
 package org.shumakriss.demo;
 
-import org.kie.server.api.model.definition.TaskInputsDefinition;
-import org.kie.server.api.model.definition.TaskOutputsDefinition;
-import org.kie.server.api.model.instance.ProcessInstance;
 import org.kie.server.api.model.instance.TaskInstance;
 import org.kie.server.api.model.instance.TaskSummary;
 import org.kie.server.client.ProcessServicesClient;
