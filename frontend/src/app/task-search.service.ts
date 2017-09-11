@@ -15,9 +15,10 @@ export class TaskSearchService {
 
 	search(term: string): Observable<Task[]> {
 		return this.http.get(`/api/bpm/task?term=${term}`)
-			.toPromise()
-			.then(response => response.json().tasks as Task[])
-			.catch(this.handleError);
+			// .toPromise()
+			// .then(response => response.json().tasks as Task[])
+			// .catch(this.handleError);
+			.map(response => response.json().tasks as Task[]);
 	}
 
 	private handleError(error: any): Promise<any> {

@@ -24,7 +24,7 @@ export class TaskDetailComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
     private questionService: QuestionService
   ) { }
 

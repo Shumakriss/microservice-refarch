@@ -4,6 +4,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Task } from './task';
+import { TaskData } from './task-data';
 
 @Injectable()
 export class TaskService {

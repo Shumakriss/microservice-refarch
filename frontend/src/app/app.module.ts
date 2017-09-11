@@ -13,7 +13,7 @@ import { TaskSearchComponent }  from './task-search.component';
 import { AppRoutingModule }     from './app-routing.module';
 
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service;
+import { InMemoryDataService }  from './in-memory-data.service';
 
 import { DynamicFormComponent }         from './dynamic-form.component';
 import { DynamicFormQuestionComponent } from './dynamic-form-question.component';

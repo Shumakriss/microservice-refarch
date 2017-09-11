@@ -6,8 +6,8 @@ import { TextboxQuestion }  from './question-textbox';
 import { CheckboxQuestion }  from './question-checkbox';
 import { RadioButtonQuestion }  from './question-radio';
 
-import { Task } From './task'
-import { TaskData } From './task-data'
+import { Task } from './task'
+import { TaskData } from './task-data'
 
 @Injectable()
 export class QuestionService {
