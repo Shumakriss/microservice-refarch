@@ -1,5 +1,5 @@
 FROM lwieske/java-8
 VOLUME /tmp
-ADD target/spring-boot-docker-demo-1.0.jar spring-boot-docker-demo.jar
-RUN sh -c 'touch /spring-boot-docker-demo.jar'
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/spring-boot-docker-demo.jar"]
+ADD target/jbpm-proxy-1.0.jar jbpm-proxy.jar
+RUN sh -c 'touch /jbpm-proxy.jar'
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/jbpm-proxy.jar"]

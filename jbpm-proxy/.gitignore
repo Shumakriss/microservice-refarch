@@ -13,5 +13,5 @@ target
 .classpath
 .vagrant
 .idea
-spring-boot-docker-demo.iml
+jbpm-proxy.iml
 .DS_Store
